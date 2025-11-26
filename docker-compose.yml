@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  booking_db:
+    image: postgres:15
+    container_name: booking_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: booking_db
+    ports:
+      - "5432:5432"
+    networks:
+      - booking_network
+    volumes:
+      - booking_data:/var/lib/postgresql/data
+
+  booking_service:
+    build: .
+    container_name: booking_service
+    restart: always
+    depends_on:
+      - booking_db
+    environment:
+      BOOKING_DATABASE_URL: "postgresql+psycopg2://postgres:postgres@booking_db:5432/booking_db"
+    ports:
+      - "8000:8000"
+    networks:
+      - booking_network
+
+networks:
+  booking_network:
+
+volumes:
+  booking_data:
