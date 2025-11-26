@@ -1,5 +1,10 @@
 from fastapi import APIRouter, HTTPException, status
 from .schemas import FlightBooking, FlightBookingCreate
+from BookingService.modelsdb import init_db
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 FlightService = APIRouter()
 
